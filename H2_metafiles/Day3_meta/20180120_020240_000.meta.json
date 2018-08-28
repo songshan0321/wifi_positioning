@@ -1,0 +1,22 @@
+{
+  "type": "Photo",
+  "mag_data": { "samples":[[100, 100, 100]] },
+  "trigger": "RTC",
+  "fw_version": "v1.5.6-0-gc109663",
+  "system_version": "v0.100.3-0-gd0517f0",
+  "hw_rev": "Clip2 Rev1D",
+  "avg_win": [50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50 ], 
+  "aec_gain": 256, 
+  "aec_exp": 16, 
+  "state_of_charge": 74, 
+  "voltage": 3866, 
+  "avg_readout": 50, 
+  "light_meter": 768, 
+  "too_dark": 0, 
+  "image_seq": 4073, 
+  "sess_seq": 1079, 
+  "acc_data": { "samples":[[11518, 5413, 9132]],
+                  "now":[13588, 9652, 8028],
+                  "std":[1411, 1511, 2065] },
+  "awb_gain": [6612, 4096, 8498] 
+}
