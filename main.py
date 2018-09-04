@@ -59,7 +59,7 @@ class MainApplication(Tk.Tk):
                 request_path = self.jsonToString(data)
                 res = self.send_request(request_path)
                 print("\n%s"%res.text)
-                csv_name = self.getFolderName(self.path.get()) + "_location.csv"
+                csv_name = self.getFolderName(self.path.get()) + ".csv"
                 self.csv_path = os.path.join(self.dirname, 'output/{0}'.format(csv_name))
                 # To handle export same csv multiple times
                 if count == 0:
@@ -116,25 +116,37 @@ class MainApplication(Tk.Tk):
         """
         Write a directory into a CSV which contains lines of lat & long & others...
         """
-        # TODO
+        # Read from csv name
+        csv_name = self.getFolderName(self.path.get())
+        ind1 = csv_name.rfind('_')
+        ind2 = csv_name.rfind(' ') + 1
+        # print (ind1, ind2)
+        if ind2 == -1 or ind2 == 0:
+            ind2 = csv_name.rfind('y') + 1
+
+        if ind1 == -1 :
+            participant_id = csv_name
+        else:
+            participant_id = csv_name[0:ind1]
+
+        day = csv_name[ind2:]
+
         # Read from response object
         data = res.json()
         if data["result"] == 200:
             lat = data["data"]["lat"]
             lon = data["data"]["lon"]
             ran = data["data"]["range"]
-            convert_time = data["data"]["time"]
-            row = [' ',file_name,self.get_datetime(file_name),lat,lon,ran,convert_time]
+            row = [participant_id,day,file_name,self.get_datetime(file_name),lat,lon,ran]
         else:
-            convert_time = data["time"]
-            row = [' ',file_name,self.get_datetime(file_name),"Unknown","Unknown","Unknown",convert_time]
+            row = [participant_id,day,file_name,self.get_datetime(file_name),"Unknown","Unknown","Unknown"]
 
             
         # write csv
         if os.path.isfile(self.csv_path) == False:
             with open(self.csv_path, 'w') as csv_file:
                 writer = csv.writer(csv_file, delimiter = ',')
-                writer.writerow(['participant_id','file_name','datetime','lat','long','range','convert_time'])
+                writer.writerow(['participant_id','day','file_name','datetime','lat','long','range'])
                 print("Created a new csv file called '{0}'".format(self.csv_path))
             with open(self.csv_path, 'a') as csv_file:
                 writer = csv.writer(csv_file, delimiter = ',')
@@ -147,16 +159,16 @@ class MainApplication(Tk.Tk):
                 print ("Added 1 row to '{0}' file successfully.".format(self.csv_path))
 
     def get_datetime(self, file_name):
-		name = file_name  # 20000101_030548_000.wscan.json  -->  YYYY-MM-DD HH:MI:SS
-		try:
+        name = file_name  # 20000101_030548_000.wscan.json  -->  YYYY-MM-DD HH:MI:SS
+        try:
 			datetime = name[0:4] + "-" + name[4:6] + "-" + name[6:8] + " " + name[9:11] + ":" + name[11:13] + ":" + name[13:15]
-		except:
+        except:
 			datetime = None
-		return datetime
+        return datetime
 
     def getFolderName(self, path):
-		index = path.rfind('/')
-		return path[index+1:]
+        index = path.rfind('/')
+        return path[index+1:]
 
 root = MainApplication()
 root.title('Wifi Position Convertor')
